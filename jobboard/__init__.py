@@ -12,8 +12,10 @@ def create_app():
         from . import models 
 
     from .views import bp
+    from .apis.job import job_bp
 
     api = Api(app)
     api.register_blueprint(bp)
+    api.register_blueprint(job_bp)
 
     return app
