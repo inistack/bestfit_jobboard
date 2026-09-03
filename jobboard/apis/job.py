@@ -1,7 +1,7 @@
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
 from flask_smorest.pagination import PaginationParameters
-from jobboard.schemas.job import JobSchema, JobQueryArgsSchema
+from jobboard.schemas.job import JobSchema, JobQueryArgsSchema, JobUpdateSchema
 from jobboard.models import Job
 from jobboard.extensions import db
 
@@ -51,7 +51,7 @@ class JobDetail(MethodView):
             abort(404, message=f"Job with ID {job_id} not found")
         return job
     
-    @job_bp.arguments(JobSchema(partial=True))
+    @job_bp.arguments(JobUpdateSchema(partial=True))
     @job_bp.response(200, JobSchema)
     def put(self, updated_job_data, job_id):
         """Update a specific Job via its ID."""

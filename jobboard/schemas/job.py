@@ -9,6 +9,9 @@ class JobSchema(Schema):
     employer_id = fields.Int(dump_only=True)
     created_at = fields.DateTime(dump_only=True)
 
+class JobUpdateSchema(JobSchema):
+    class Meta:
+        pass
 
 class JobQueryArgsSchema(Schema):
     title = fields.Str(required=False)
