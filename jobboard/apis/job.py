@@ -1,6 +1,7 @@
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
-from jobboard.schemas.job import JobSchema
+from flask_smorest.pagination import PaginationParameters
+from jobboard.schemas.job import JobSchema, JobQueryArgsSchema
 from jobboard.models import Job
 from jobboard.extensions import db
 
@@ -8,10 +9,26 @@ job_bp = Blueprint('jobs', __name__, description='Job management endpoints')
 
 @job_bp.route('/jobs')
 class JobList(MethodView):
+    @job_bp.arguments(JobQueryArgsSchema, location='query')
     @job_bp.response(200, JobSchema(many=True))
-    def get(self):
+    @job_bp.paginate()
+    def get(self, query_args, pagination_parameters: PaginationParameters):
         """Get a list of all jobs."""
-        jobs = db.session.query(Job).all()
+        query = db.session.query(Job)
+        if 'title' in query_args:
+            query = query.filter(Job.title.ilike(f"%{query_args['title']}%"))
+        if 'location' in query_args:
+            query = query.filter(Job.location.ilike(f"%{query_args['location']}%"))
+        if 'tags' in query_args:
+            query = query.filter(Job.tags.ilike(f"%{query_args['tags']}%"))
+
+        total = query.count()
+        pagination_parameters.item_count = total
+        query = query.limit(pagination_parameters.page_size).offset(
+            (pagination_parameters.page - 1) * pagination_parameters.page_size
+        )
+
+        jobs = query.all()
         return jobs
 
     @job_bp.arguments(JobSchema)

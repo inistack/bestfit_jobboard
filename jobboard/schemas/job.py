@@ -9,3 +9,8 @@ class JobSchema(Schema):
     employer_id = fields.Int(dump_only=True)
     created_at = fields.DateTime(dump_only=True)
 
+
+class JobQueryArgsSchema(Schema):
+    title = fields.Str(required=False)
+    location = fields.Str(required=False)
+    tags = fields.Str(required=False)
