@@ -4,6 +4,7 @@ from flask_smorest.pagination import PaginationParameters
 from jobboard.schemas.job import JobSchema, JobQueryArgsSchema, JobUpdateSchema
 from jobboard.models import Job
 from jobboard.extensions import db
+from jobboard.utils.decorators import role_required
 
 job_bp = Blueprint('jobs', __name__, description='Job management endpoints')
 
@@ -31,6 +32,7 @@ class JobList(MethodView):
         jobs = query.all()
         return jobs
 
+    @role_required('employer')
     @job_bp.arguments(JobSchema)
     @job_bp.response(201, JobSchema)
     def post(self, new_job_data):
@@ -50,7 +52,8 @@ class JobDetail(MethodView):
         if job is None:
             abort(404, message=f"Job with ID {job_id} not found")
         return job
-    
+
+    @role_required('employer')
     @job_bp.arguments(JobUpdateSchema(partial=True))
     @job_bp.response(200, JobSchema)
     def put(self, updated_job_data, job_id):
@@ -65,6 +68,7 @@ class JobDetail(MethodView):
         db.session.commit()
         return job
     
+    @role_required('employer')
     @job_bp.response(204)
     def delete(self, job_id):
         """Delete a specific Job via its ID"""
