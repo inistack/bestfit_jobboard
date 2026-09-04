@@ -14,9 +14,11 @@ def create_app():
 
     from .views import bp
     from .apis.job import job_bp
+    from .apis.auth import auth_bp
 
     api = Api(app)
     api.register_blueprint(bp)
     api.register_blueprint(job_bp)
+    api.register_blueprint(auth_bp)
 
     return app
