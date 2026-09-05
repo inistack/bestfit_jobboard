@@ -44,7 +44,6 @@ class ApplicationDetail(MethodView):
             abort(404, message='Application not found')
         
         candidate_id = get_jwt_identity()
-        print(f"Candidate ID from JWT: {candidate_id}, Application Candidate ID: {application.candidate_id}")
         if application.candidate_id != int(candidate_id):
             abort(403, message='Not your application')
         
