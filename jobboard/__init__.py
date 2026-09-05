@@ -1,6 +1,6 @@
 from flask import Flask
 from flask_smorest import Api
-from .extensions import db, migrate, jwt
+from .extensions import db, migrate, jwt, limiter
 
 def create_app():
     app = Flask(__name__)
@@ -8,6 +8,7 @@ def create_app():
     db.init_app(app)
     jwt.init_app(app)
     migrate.init_app(app, db)
+    limiter.init_app(app)
 
     with app.app_context():
         from . import models 

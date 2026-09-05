@@ -2,7 +2,7 @@ from flask.views import MethodView
 from flask_smorest import abort, Blueprint
 from jobboard.schemas.application import ApplicationSchema
 from jobboard.models import Application, Job
-from jobboard.extensions import db
+from jobboard.extensions import db, limiter
 from jobboard.utils.decorators import role_required
 from flask_jwt_extended import get_jwt_identity
 
@@ -18,6 +18,7 @@ class ApplicationList(MethodView):
         candidate_applications = db.session.query(Application).filter(Application.candidate_id==candidate_id).all()
         return candidate_applications
     
+    @limiter.limit("10 per hour")
     @role_required('candidate')
     @appl_bp.arguments(ApplicationSchema)
     @appl_bp.response(201, ApplicationSchema)
