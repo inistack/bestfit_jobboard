@@ -30,6 +30,7 @@ class ApplicationList(MethodView):
         application = Application(candidate_id=candidate_id, job_id=application_data['job_id'], cover_letter=application_data['cover_letter'])
         db.session.add(application)
         db.session.commit()
+        return application
         
 
 @appl_bp.route('/applications/<int:application_id>')
@@ -43,7 +44,8 @@ class ApplicationDetail(MethodView):
             abort(404, message='Application not found')
         
         candidate_id = get_jwt_identity()
-        if application.candidate_id != candidate_id:
+        print(f"Candidate ID from JWT: {candidate_id}, Application Candidate ID: {application.candidate_id}")
+        if application.candidate_id != int(candidate_id):
             abort(403, message='Not your application')
         
         return application
