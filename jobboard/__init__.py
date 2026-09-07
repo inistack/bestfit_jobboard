@@ -2,6 +2,9 @@ from flask import Flask
 from flask_smorest import Api
 from .extensions import db, migrate, jwt, limiter
 from .celery_app import make_celery
+from dotenv import load_dotenv
+
+load_dotenv()
 
 def create_app():
     app = Flask(__name__)
