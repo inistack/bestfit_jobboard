@@ -5,7 +5,7 @@ from jobboard.models import Application, Job, User
 from jobboard.extensions import db, limiter
 from jobboard.utils.decorators import role_required
 from flask_jwt_extended import get_jwt_identity
-from jobboard.tasks import send_comfirmation_email, generate_application_pdf
+from jobboard.tasks import generate_application_pdf, send_confirmation_email
 from celery import chain
 
 appl_bp = Blueprint('applications', __name__, description='Job application endpoints')
@@ -35,7 +35,7 @@ class ApplicationList(MethodView):
         db.session.commit()
         candidate = db.session.query(User).filter(User.id==candidate_id).first()
         pipeline = chain(
-            send_comfirmation_email.s(application.id, candidate.email, job.title),
+            send_confirmation_email.s(application.id, candidate.email, job.title),
             generate_application_pdf.si(application.id)
         )
         pipeline.delay()
