@@ -17,7 +17,7 @@ class Register(MethodView):
         if existing_user:
             abort(409, message='User with this email already exists')
         
-        new_user = User(email=user_data['email'], role=user_data['role'])
+        new_user = User(email=user_data['email'], name=user_data['name'], role=user_data['role'])
         new_user.set_password(user_data['password'])
         db.session.add(new_user)
         db.session.commit()

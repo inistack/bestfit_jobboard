@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BestFit Application Summary PDF</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 40px;
+        color: #222;
+      }
+      h1 {
+        font-size: 20px;
+        border-bottom: 2px solid #333;
+        padding-bottom: 8px;
+      }
+      .field {
+        margin-bottom: 12px;
+      }
+      .label {
+        font-weight: bold;
+      }
+      .cover-letter {
+        white-space: pre-wrap;
+        margin-top: 8px;
+        line-height: 1.5;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Application Summary</h1>
+
+    <div class="field">
+        <span class="label">Candidate:</span> {{ candidate_name }}
+    </div>
+    <div class="field">
+        <span class="label">Email:</span> {{ candidate_email }}
+    </div>
+    <div class="field">
+        <span class="label">Job Applied To:</span> {{ job_title }}
+    </div>
+    <div class="field">
+        <span class="label">Location:</span> {{ job_location }}
+    </div>
+    <div class="field">
+        <span class="label">Submitted:</span> {{ submitted_at }}
+    </div>
+
+    <div class="field">
+        <span class="label">Cover Letter:</span>
+        <div class="cover-letter">{{ cover_letter }}</div>
+    </div>
+
+  </body>
+</html>

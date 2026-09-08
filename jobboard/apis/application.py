@@ -1,11 +1,12 @@
 from flask.views import MethodView
 from flask_smorest import abort, Blueprint
 from jobboard.schemas.application import ApplicationSchema, ApplicationStatusSchema
-from jobboard.models import Application, Job
+from jobboard.models import Application, Job, User
 from jobboard.extensions import db, limiter
 from jobboard.utils.decorators import role_required
 from flask_jwt_extended import get_jwt_identity
-from jobboard.tasks import send_comfirmation_email
+from jobboard.tasks import send_comfirmation_email, generate_application_pdf
+from celery import chain
 
 appl_bp = Blueprint('applications', __name__, description='Job application endpoints')
 
@@ -32,7 +33,12 @@ class ApplicationList(MethodView):
         application = Application(candidate_id=candidate_id, job_id=application_data['job_id'], cover_letter=application_data['cover_letter'])
         db.session.add(application)
         db.session.commit()
-        send_comfirmation_email.delay(application_id=application.id, candidate_email=application.candidate.email, job_title=job.title)
+        candidate = db.session.query(User).filter(User.id==candidate_id).first()
+        pipeline = chain(
+            send_comfirmation_email.s(application.id, candidate.email, job.title),
+            generate_application_pdf.si(application.id)
+        )
+        pipeline.delay()
         return application
         
 
