@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_smorest import Api
-from .extensions import db, migrate, jwt, limiter
-from .celery_app import make_celery
+from .extensions import db, migrate, jwt, limiter, mail
+from .celery_app import init_celery
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -13,7 +13,8 @@ def create_app():
     jwt.init_app(app)
     migrate.init_app(app, db)
     limiter.init_app(app)
-    app.celery = make_celery(app)
+    mail.init_app(app)
+    app.celery = init_celery(app)
 
     with app.app_context():
         from . import models 

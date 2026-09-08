@@ -4,6 +4,7 @@ from flask_jwt_extended import JWTManager
 from flask_limiter import Limiter
 from flask_jwt_extended import get_jwt_identity, verify_jwt_in_request
 from flask_limiter.util import get_remote_address
+from flask_mail import Mail
 
 
 def rate_limit_key():
@@ -20,3 +21,4 @@ db = SQLAlchemy()
 migrate = Migrate()
 jwt = JWTManager()
 limiter = Limiter(key_func=rate_limit_key)
+mail = Mail()

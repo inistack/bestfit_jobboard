@@ -5,6 +5,7 @@ from jobboard.models import Application, Job
 from jobboard.extensions import db, limiter
 from jobboard.utils.decorators import role_required
 from flask_jwt_extended import get_jwt_identity
+from jobboard.tasks import send_comfirmation_email
 
 appl_bp = Blueprint('applications', __name__, description='Job application endpoints')
 
@@ -31,6 +32,7 @@ class ApplicationList(MethodView):
         application = Application(candidate_id=candidate_id, job_id=application_data['job_id'], cover_letter=application_data['cover_letter'])
         db.session.add(application)
         db.session.commit()
+        send_comfirmation_email.delay(candidate_email=application.candidate.email, job_title=job.title)
         return application
         
 
