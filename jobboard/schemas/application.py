@@ -8,3 +8,10 @@ class ApplicationSchema(Schema):
     status = fields.Str(dump_only=True)
     pdf_url = fields.Str(dump_only=True)
     created_at = fields.DateTime(dump_only=True)
+
+
+class ApplicationStatusSchema(Schema):
+    id = fields.Int(dump_only=True)
+    status = fields.Str(dump_only=True)
+    pdf_url = fields.Str(dump_only=True)
+

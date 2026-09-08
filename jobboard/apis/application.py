@@ -1,6 +1,6 @@
 from flask.views import MethodView
 from flask_smorest import abort, Blueprint
-from jobboard.schemas.application import ApplicationSchema
+from jobboard.schemas.application import ApplicationSchema, ApplicationStatusSchema
 from jobboard.models import Application, Job
 from jobboard.extensions import db, limiter
 from jobboard.utils.decorators import role_required
@@ -32,7 +32,7 @@ class ApplicationList(MethodView):
         application = Application(candidate_id=candidate_id, job_id=application_data['job_id'], cover_letter=application_data['cover_letter'])
         db.session.add(application)
         db.session.commit()
-        send_comfirmation_email.delay(candidate_email=application.candidate.email, job_title=job.title)
+        send_comfirmation_email.delay(application_id=application.id, candidate_email=application.candidate.email, job_title=job.title)
         return application
         
 
@@ -46,6 +46,22 @@ class ApplicationDetail(MethodView):
         if application is None:
             abort(404, message='Application not found')
         
+        candidate_id = get_jwt_identity()
+        if application.candidate_id != int(candidate_id):
+            abort(403, message='Not your application')
+        
+        return application
+
+
+@appl_bp.route('/applications/<int:application_id>/status')
+class ApplicationStatus(MethodView):
+    @role_required('candidate')
+    @appl_bp.response(200, ApplicationStatusSchema)
+    def get(self, application_id):
+        application = db.session.query(Application).filter_by(id=application_id).first()
+        if application is None:
+            abort(404, message='Application not found')
+
         candidate_id = get_jwt_identity()
         if application.candidate_id != int(candidate_id):
             abort(403, message='Not your application')
