@@ -19,6 +19,11 @@ def app():
 def client(app):
     return app.test_client()
 
+@pytest.fixture(autouse=True)
+def mock_celery_chain(mocker, app):
+    return mocker.patch('jobboard.apis.application.chain')
+
+
 @pytest.fixture
 def candidate_token(client):
     client.post('/auth/register', json={
