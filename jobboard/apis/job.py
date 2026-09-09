@@ -5,6 +5,7 @@ from jobboard.schemas.job import JobSchema, JobQueryArgsSchema, JobUpdateSchema
 from jobboard.models import Job
 from jobboard.extensions import db
 from jobboard.utils.decorators import role_required
+from flask_jwt_extended import get_jwt_identity
 
 job_bp = Blueprint('jobs', __name__, description='Job management endpoints')
 
@@ -37,7 +38,8 @@ class JobList(MethodView):
     @job_bp.response(201, JobSchema)
     def post(self, new_job_data):
         """Create a new job."""
-        new_job = Job(**new_job_data, employer_id=1)
+        employer_id = get_jwt_identity()
+        new_job = Job(**new_job_data, employer_id=int(employer_id))
         db.session.add(new_job)
         db.session.commit()
         return new_job

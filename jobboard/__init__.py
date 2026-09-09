@@ -6,9 +6,9 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-def create_app():
+def create_app(config_object='config.Config'):
     app = Flask(__name__)
-    app.config.from_object('config.Config')
+    app.config.from_object(config_object)
     db.init_app(app)
     jwt.init_app(app)
     migrate.init_app(app, db)
