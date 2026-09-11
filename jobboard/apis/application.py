@@ -13,6 +13,7 @@ appl_bp = Blueprint('applications', __name__, description='Job application endpo
 @appl_bp.route('/applications')
 class ApplicationList(MethodView):
 
+    @appl_bp.doc(security=[{'bearerAuth': []}])
     @role_required('candidate')
     @appl_bp.response(200, ApplicationSchema(many=True))
     def get(self):
@@ -20,6 +21,7 @@ class ApplicationList(MethodView):
         candidate_applications = db.session.query(Application).filter(Application.candidate_id==candidate_id).all()
         return candidate_applications
     
+    @appl_bp.doc(security=[{'bearerAuth': []}])
     @limiter.limit("10 per hour")
     @role_required('candidate')
     @appl_bp.arguments(ApplicationSchema)
@@ -45,6 +47,7 @@ class ApplicationList(MethodView):
 @appl_bp.route('/applications/<int:application_id>')
 class ApplicationDetail(MethodView):
 
+    @appl_bp.doc(security=[{'bearerAuth': []}])
     @role_required('candidate')
     @appl_bp.response(200, ApplicationSchema)
     def get(self, application_id):
@@ -61,6 +64,7 @@ class ApplicationDetail(MethodView):
 
 @appl_bp.route('/applications/<int:application_id>/status')
 class ApplicationStatus(MethodView):
+    @appl_bp.doc(security=[{'bearerAuth': []}])
     @role_required('candidate')
     @appl_bp.response(200, ApplicationStatusSchema)
     def get(self, application_id):

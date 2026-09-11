@@ -29,5 +29,11 @@ def create_app(config_object='config.Config'):
     api.register_blueprint(job_bp)
     api.register_blueprint(auth_bp)
     api.register_blueprint(appl_bp)
+    
+    api.spec.components.security_scheme('bearerAuth', {
+    'type': 'http',
+    'scheme': 'bearer',
+    'bearerFormat': 'JWT',
+    })
 
     return app

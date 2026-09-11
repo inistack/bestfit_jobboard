@@ -33,6 +33,7 @@ class JobList(MethodView):
         jobs = query.all()
         return jobs
 
+    @job_bp.doc(security=[{'bearerAuth': []}])
     @role_required('employer')
     @job_bp.arguments(JobSchema)
     @job_bp.response(201, JobSchema)
@@ -55,6 +56,7 @@ class JobDetail(MethodView):
             abort(404, message=f"Job with ID {job_id} not found")
         return job
 
+    @job_bp.doc(security=[{'bearerAuth': []}])
     @role_required('employer')
     @job_bp.arguments(JobUpdateSchema(partial=True))
     @job_bp.response(200, JobSchema)
@@ -70,6 +72,7 @@ class JobDetail(MethodView):
         db.session.commit()
         return job
     
+    @job_bp.doc(security=[{'bearerAuth': []}])
     @role_required('employer')
     @job_bp.response(204)
     def delete(self, job_id):

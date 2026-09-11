@@ -4,6 +4,8 @@ apispec==6.10.0
 bcrypt==5.0.0
 billiard==4.2.4
 blinker==1.9.0
+boto3==1.43.92
+botocore==1.43.92
 brotli==1.2.0
 celery==5.6.3
 cffi==2.1.1
@@ -25,6 +27,7 @@ greenlet==3.5.5
 iniconfig==2.3.0
 itsdangerous==2.2.0
 Jinja2==3.1.6
+jmespath==1.1.0
 kombu==5.6.2
 limits==5.8.0
 Mako==1.4.1
@@ -47,6 +50,7 @@ pytest-mock==3.15.1
 python-dateutil==2.9.0.post0
 python-dotenv==1.2.3
 redis==8.1.0
+s3transfer==0.19.2
 six==1.17.0
 SQLAlchemy==2.0.52
 tinycss2==1.5.1
@@ -54,6 +58,7 @@ tinyhtml5==2.1.0
 typing_extensions==4.16.0
 tzdata==2026.3
 tzlocal==5.4.4
+urllib3==2.7.0
 vine==5.1.0
 wcwidth==0.8.3
 weasyprint==70.0
