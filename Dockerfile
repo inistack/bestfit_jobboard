@@ -15,4 +15,4 @@ COPY . .
 
 EXPOSE 5000
 
-CMD flask db upgrade && gunicorn --bind 0.0.0.0:${PORT:-5000} --workers 3 run:app
+CMD flask --app run:app db upgrade && gunicorn --bind 0.0.0.0:${PORT:-5000} --workers 3 run:app
