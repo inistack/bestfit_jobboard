@@ -28,7 +28,7 @@ services:
   
   api:
     build: .
-    command: flask run --host=0.0.0.0
+    command: gunicorn -b 0.0.0.0:5000 --workers 3 run:app 
     volumes:
       - .:/app
     ports:
