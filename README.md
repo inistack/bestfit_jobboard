@@ -20,6 +20,11 @@ pip install -r requirements.txt
 
 Create a `.env` file with your database, JWT, mail (Mailtrap), and S3-compatible storage credentials (Backblaze B2, R2, etc.).
 
+Set FLASK_APP in project:
+```
+export FLASK_APP=jobboard
+```
+
 Run migrations:
 ```bash
 flask db upgrade
