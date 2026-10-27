@@ -75,9 +75,12 @@ class JobDetail(MethodView):
     @job_bp.doc(security=[{'bearerAuth': []}])
     @role_required('employer')
     @job_bp.response(204)
-    def delete(self, job_id):
+    def delete(self, job_id, ):
         """Delete a specific Job via its ID"""
         job = db.session.query(Job).filter_by(id=job_id).first()
+        employer_id = get_jwt_identity()
+        if job.employer_id != int(employer_id):
+            abort(403, message="You are not authorized to delete this job")
         if job is None:
             abort(404, message=f"Job with ID {job_id} not found")
         
