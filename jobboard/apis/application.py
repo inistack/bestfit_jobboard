@@ -48,10 +48,12 @@ class ApplicationList(MethodView):
 class ApplicationDetail(MethodView):
 
     @appl_bp.doc(security=[{'bearerAuth': []}])
-    @role_required('candidate')
+    @role_required('candidate', 'employer')
     @appl_bp.response(200, ApplicationSchema)
     def get(self, application_id):
         application = db.session.query(Application).filter(Application.id == application_id).first()
+        job = db.session.query(Job).filter(Job.id == application.job_id).first()
+        employer_id = job.employer_id if job else None
         if application is None:
             abort(404, message='Application not found')
         
@@ -59,13 +61,16 @@ class ApplicationDetail(MethodView):
         if application.candidate_id != int(candidate_id):
             abort(403, message='Not your application')
         
+        if (employer_id != job.employer_id) and (application.job_id != job.id):
+            abort(403, message='Job application does not belong to this employer')
+        
         return application
 
 
 @appl_bp.route('/applications/<int:application_id>/status')
 class ApplicationStatus(MethodView):
     @appl_bp.doc(security=[{'bearerAuth': []}])
-    @role_required('candidate')
+    @role_required('candidate', 'employer')
     @appl_bp.response(200, ApplicationStatusSchema)
     def get(self, application_id):
         application = db.session.query(Application).filter_by(id=application_id).first()
