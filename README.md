@@ -25,6 +25,14 @@ Set `FLASK_APP` in project:
 export FLASK_APP=jobboard
 ```
 
+Create your .env file: 
+```
+# copy from the template
+cp .env.example .env
+```
+Open .env and fill in the required values. 
+
+
 Run migrations:
 ```bash
 flask db upgrade
